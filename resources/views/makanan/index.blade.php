@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2"> Daftar Menu NgabFood</h1>
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Daftar Menu NgabFood</h1>
         <p class="text-gray-600">Kelola semua menu makanan di NgabFood</p>
     </div>
 
