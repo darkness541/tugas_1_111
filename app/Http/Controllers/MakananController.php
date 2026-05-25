@@ -9,7 +9,7 @@ class MakananController extends Controller
 {
     public function index()
     {
-        $makanans = Makanan::orderBy('id', 'desc')->get();
+        $makanans = Makanan::latest('id')->get();
         return view('makanan.index', compact('makanans'));
     }
 
@@ -34,7 +34,6 @@ class MakananController extends Controller
                          ->with('success', 'Menu baru berhasil ditambahkan!');
     }
 
-    // ==================== FITUR EDIT ====================
     public function edit(Makanan $makanan)
     {
         return view('makanan.edit', compact('makanan'));
@@ -54,5 +53,13 @@ class MakananController extends Controller
 
         return redirect()->route('makanan.index')
                          ->with('success', 'Menu berhasil diupdate!');
+    }
+
+    public function destroy(Makanan $makanan)
+    {
+        $makanan->delete();
+
+        return redirect()->route('makanan.index')
+                         ->with('success', 'Menu berhasil dihapus!');
     }
 }
