@@ -8,10 +8,25 @@ use Illuminate\Http\Request;
 
 class MakananController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $makanans = Makanan::with('kategori')->latest('id')->get();
-        return view('makanan.index', compact('makanans'));
+        $search = $request->get('search');
+        $kategori_id = $request->get('kategori_id');
+
+        $makanans = Makanan::with('kategori')  // Eager Loading (mencegah N+1 Problem)
+            ->when($search, function($query, $search) {
+                return $query->where('nama', 'like', "%{$search}%")
+                             ->orWhere('deskripsi', 'like', "%{$search}%");
+            })
+            ->when($kategori_id, function($query, $kategori_id) {
+                return $query->where('kategori_id', $kategori_id);
+            })
+            ->latest('id')
+            ->paginate(10);
+
+        $kategoris = Kategori::all();
+
+        return view('makanan.index', compact('makanans', 'kategoris', 'search', 'kategori_id'));
     }
 
     public function create()
@@ -65,7 +80,6 @@ class MakananController extends Controller
                          ->with('success', 'Menu berhasil dihapus!');
     }
 
-    // ==================== FITUR SHOW (DETAIL) ====================
     public function show(Makanan $makanan)
     {
         return view('makanan.show', compact('makanan'));
