@@ -13,7 +13,7 @@ class MakananController extends Controller
         $search = $request->get('search');
         $kategori_id = $request->get('kategori_id');
 
-        $makanans = Makanan::with('kategori')  // Eager Loading (mencegah N+1 Problem)
+        $makanans = Makanan::with('kategori')
             ->when($search, function($query, $search) {
                 return $query->where('nama', 'like', "%{$search}%")
                              ->orWhere('deskripsi', 'like', "%{$search}%");
@@ -29,27 +29,27 @@ class MakananController extends Controller
         return view('makanan.index', compact('makanans', 'kategoris', 'search', 'kategori_id'));
     }
 
-public function create()
-{
-    $kategoris = Kategori::all();
-    return view('makanan.create', compact('kategoris'));
-}
+    public function create()
+    {
+        $kategoris = Kategori::all();
+        return view('makanan.create', compact('kategoris'));
+    }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'nama'        => 'required|string|max:255',
-        'harga'       => 'required|integer|min:0',
-        'deskripsi'   => 'required|string',
-        'kategori_id' => 'required|exists:kategoris,id',
-        'stok'        => 'required|integer|min:0',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama'        => 'required|string|max:255',
+            'harga'       => 'required|integer|min:0',
+            'deskripsi'   => 'required|string',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'stok'        => 'required|integer|min:0',
+        ]);
 
-    Makanan::create($request->all());
+        Makanan::create($request->all());
 
-    return redirect()->route('makanan.index')
-                     ->with('success', 'Menu baru berhasil ditambahkan!');
-}
+        return redirect()->route('makanan.index')
+                         ->with('success', 'Menu baru berhasil ditambahkan!');
+    }
 
     public function edit(Makanan $makanan)
     {
