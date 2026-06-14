@@ -36,27 +36,27 @@ class MakananController extends Controller
                          ->with('success', 'Menu baru berhasil ditambahkan!');
     }
 
-    public function edit(Makanan $makanan)
-    {
-        $kategoris = Kategori::all();
-        return view('makanan.edit', compact('makanan', 'kategoris'));
-    }
+  public function edit(Makanan $makanan)
+{
+    $kategoris = Kategori::all();
+    return view('makanan.edit', compact('makanan', 'kategoris'));
+}
 
-    public function update(Request $request, Makanan $makanan)
-    {
-        $request->validate([
-            'nama'        => 'required|string|max:255',
-            'harga'       => 'required|integer|min:0',
-            'deskripsi'   => 'required|string',
-            'kategori_id' => 'required|exists:kategoris,id',
-            'stok'        => 'required|integer|min:0',
-        ]);
+public function update(Request $request, Makanan $makanan)
+{
+    $request->validate([
+        'nama'        => 'required|string|max:255',
+        'harga'       => 'required|integer|min:0',
+        'deskripsi'   => 'required|string',
+        'kategori_id' => 'required|exists:kategoris,id',
+        'stok'        => 'required|integer|min:0',
+    ]);
 
-        $makanan->update($request->all());
+    $makanan->update($request->all());
 
-        return redirect()->route('makanan.index')
-                         ->with('success', 'Menu berhasil diupdate!');
-    }
+    return redirect()->route('makanan.index')
+                     ->with('success', 'Menu berhasil diupdate!');
+}
 
     public function destroy(Makanan $makanan)
     {

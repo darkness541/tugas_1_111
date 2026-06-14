@@ -40,4 +40,24 @@ class KategoriController extends Controller
         return redirect()->route('kategori.index')
                          ->with('success', 'Kategori berhasil ditambahkan!');
     }
+
+    // ==================== FITUR EDIT ====================
+    public function edit(Kategori $kategori)
+    {
+        return view('kategori.edit', compact('kategori'));
+    }
+
+    public function update(Request $request, Kategori $kategori)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'warna' => 'nullable|string|max:50',
+        ]);
+
+        $kategori->update($request->all());
+
+        return redirect()->route('kategori.index')
+                         ->with('success', 'Kategori berhasil diupdate!');
+    }
 }

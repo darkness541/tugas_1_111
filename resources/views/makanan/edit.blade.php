@@ -5,10 +5,8 @@
 @section('content')
     <div class="max-w-2xl mx-auto">
         <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Edit Menu</h1>
-            <a href="{{ route('makanan.index') }}" class="text-gray-600 hover:text-gray-800 font-medium">
-                ← Kembali
-            </a>
+            <h1 class="text-3xl font-bold text-gray-800">✏️ Edit Menu</h1>
+            <a href="{{ route('makanan.index') }}" class="text-gray-600 hover:text-gray-800">← Kembali</a>
         </div>
 
         <form action="{{ route('makanan.update', $makanan) }}" method="POST" class="bg-white rounded-2xl shadow p-8">
@@ -16,6 +14,7 @@
             @method('PUT')
 
             <div class="grid grid-cols-1 gap-6">
+                <!-- Nama Menu -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Menu</label>
                     <input type="text" name="nama" value="{{ old('nama', $makanan->nama) }}"
@@ -23,6 +22,23 @@
                         required>
                 </div>
 
+                <!-- Kategori -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                    <select name="kategori_id"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-orange-500"
+                        required>
+                        <option value="">-- Pilih Kategori --</option>
+                        @foreach ($kategoris as $kategori)
+                            <option value="{{ $kategori->id }}"
+                                {{ old('kategori_id', $makanan->kategori_id) == $kategori->id ? 'selected' : '' }}>
+                                {{ $kategori->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Harga & Stok -->
                 <div class="grid grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Harga (Rp)</label>
@@ -38,23 +54,7 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-                    <select name="kategori"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-orange-500"
-                        required>
-                        <option value="Makanan Utama"
-                            {{ old('kategori', $makanan->kategori) == 'Makanan Utama' ? 'selected' : '' }}>Makanan Utama
-                        </option>
-                        <option value="Minuman" {{ old('kategori', $makanan->kategori) == 'Minuman' ? 'selected' : '' }}>
-                            Minuman</option>
-                        <option value="Camilan" {{ old('kategori', $makanan->kategori) == 'Camilan' ? 'selected' : '' }}>
-                            Camilan</option>
-                        <option value="Dessert" {{ old('kategori', $makanan->kategori) == 'Dessert' ? 'selected' : '' }}>
-                            Dessert</option>
-                    </select>
-                </div>
-
+                <!-- Deskripsi -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
                     <textarea name="deskripsi" rows="4"
