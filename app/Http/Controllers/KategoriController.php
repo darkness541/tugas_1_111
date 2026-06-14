@@ -17,10 +17,27 @@ class KategoriController extends Controller
                              ->orWhere('deskripsi', 'like', "%{$search}%");
             })
             ->latest()
-            ->paginate(10);   // Pagination 10 data per halaman
+            ->paginate(10);
 
         return view('kategori.index', compact('kategoris', 'search'));
     }
 
-    // Method lain akan ditambahkan di commit berikutnya
+    public function create()
+    {
+        return view('kategori.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'warna' => 'nullable|string|max:50',
+        ]);
+
+        Kategori::create($request->all());
+
+        return redirect()->route('kategori.index')
+                         ->with('success', 'Kategori berhasil ditambahkan!');
+    }
 }

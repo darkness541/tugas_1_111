@@ -10,7 +10,7 @@
         </div>
         <a href="{{ route('makanan.create') }}"
             class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2">
-            <span>+</span> Tambah Menu Baru
+            + Tambah Menu Baru
         </a>
     </div>
 
@@ -35,15 +35,22 @@
                 @forelse($makanans as $makanan)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-5 font-medium">{{ $makanan->nama }}</td>
+
+                        <!-- Kategori yang sudah diperbaiki -->
                         <td class="px-6 py-5">
-                            <span
-                                class="inline-block px-3 py-1 text-xs font-medium rounded-full 
-                            @if ($makanan->kategori == 'Makanan Utama') bg-blue-100 text-blue-700
-                            @elseif($makanan->kategori == 'Minuman') bg-cyan-100 text-cyan-700
-                            @else bg-amber-100 text-amber-700 @endif">
-                                {{ $makanan->kategori }}
-                            </span>
+                            @if ($makanan->kategori)
+                                <span
+                                    class="inline-block px-3 py-1 text-xs font-medium rounded-full 
+                                @if ($makanan->kategori->warna) bg-{{ $makanan->kategori->warna }}-100 text-{{ $makanan->kategori->warna }}-700 
+                                @else 
+                                    bg-blue-100 text-blue-700 @endif">
+                                    {{ $makanan->kategori->nama }}
+                                </span>
+                            @else
+                                <span class="text-red-500 text-sm">—</span>
+                            @endif
                         </td>
+
                         <td class="px-6 py-5 text-right font-medium">
                             Rp {{ number_format($makanan->harga) }}
                         </td>
@@ -55,6 +62,8 @@
                         <td class="px-6 py-5 text-center space-x-4">
                             <a href="{{ route('makanan.edit', $makanan) }}"
                                 class="text-blue-600 hover:text-blue-800 font-medium">Edit</a>
+                            <a href="{{ route('makanan.show', $makanan) }}"
+                                class="text-purple-600 hover:text-purple-800 font-medium">Detail</a>
                             <form action="{{ route('makanan.destroy', $makanan) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')

@@ -3,29 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Makanan;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class MakananController extends Controller
 {
     public function index()
     {
-        $makanans = Makanan::latest('id')->get();
+        $makanans = Makanan::with('kategori')->latest('id')->get();
         return view('makanan.index', compact('makanans'));
     }
 
     public function create()
     {
-        return view('makanan.create');
+        $kategoris = Kategori::all();
+        return view('makanan.create', compact('kategoris'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama'       => 'required|string|max:255',
-            'harga'      => 'required|integer|min:0',
-            'deskripsi'  => 'required|string',
-            'kategori'   => 'required|string',
-            'stok'       => 'required|integer|min:0',
+            'nama'        => 'required|string|max:255',
+            'harga'       => 'required|integer|min:0',
+            'deskripsi'   => 'required|string',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'stok'        => 'required|integer|min:0',
         ]);
 
         Makanan::create($request->all());
@@ -36,17 +38,18 @@ class MakananController extends Controller
 
     public function edit(Makanan $makanan)
     {
-        return view('makanan.edit', compact('makanan'));
+        $kategoris = Kategori::all();
+        return view('makanan.edit', compact('makanan', 'kategoris'));
     }
 
     public function update(Request $request, Makanan $makanan)
     {
         $request->validate([
-            'nama'       => 'required|string|max:255',
-            'harga'      => 'required|integer|min:0',
-            'deskripsi'  => 'required|string',
-            'kategori'   => 'required|string',
-            'stok'       => 'required|integer|min:0',
+            'nama'        => 'required|string|max:255',
+            'harga'       => 'required|integer|min:0',
+            'deskripsi'   => 'required|string',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'stok'        => 'required|integer|min:0',
         ]);
 
         $makanan->update($request->all());
@@ -58,7 +61,6 @@ class MakananController extends Controller
     public function destroy(Makanan $makanan)
     {
         $makanan->delete();
-
         return redirect()->route('makanan.index')
                          ->with('success', 'Menu berhasil dihapus!');
     }
